@@ -19,7 +19,7 @@ Follow the [instructions](https://cert-manager.io/docs/installation/) using the 
 #### Using public helm chart
 ```bash
 helm repo add cert-manager-webhook-hetzner https://vadimkim.github.io/cert-manager-webhook-hetzner
-helm install --namespace cert-manager cert-manager-webhook-hetzner cert-manager-webhook-hetzner/cert-manager-webhook-hetzner
+helm upgrade -i --namespace cert-manager cert-manager-webhook-hetzner cert-manager-webhook-hetzner/cert-manager-webhook-hetzner
 ```
 
 #### From local checkout
@@ -36,7 +36,8 @@ helm uninstall --namespace cert-manager cert-manager-webhook-hetzner
 
 ## Issuer
 
-Create a `ClusterIssuer` or `Issuer` resource as following:
+Create a `ClusterIssuer` or `Issuer` resource.
+The **groupName** must be the same as in the Helm Chart (see [deploy/cert-manager-webhook-hetzner/values.yaml](deploy/cert-manager-webhook-hetzner/values.yaml) for the details):  
 ```yaml
 apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
@@ -44,8 +45,10 @@ metadata:
   name: letsencrypt-staging
 spec:
   acme:
-    # The ACME server URL
+    # The ACME server URL for staging:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # If you want to use production ACME server URL: 
+    # server: https://acme-v02.api.letsencrypt.org/directory
 
     # Email address used for ACME registration
     email: mail@example.com # REPLACE THIS WITH YOUR EMAIL!!!
@@ -66,10 +69,8 @@ spec:
 ```
 
 ### Credentials
-In order to access the Hetzner API, the webhook needs an API token.
-
-If you choose another name for the secret than `hetzner-secret`, ensure you modify the value of `secretName` in the `[Cluster]Issuer`.
-
+In order to access the Hetzner API, the webhook needs an API token. You can get the API token in the [Hetzner DNS Web Console](https://dns.hetzner.com/settings/api-token).  
+If you choose another name for the secret than `hetzner-secret`, ensure you modify the value of `secretName` in the `[Cluster]Issuer` and change it in the Helm Chart values.  
 The secret for the example above will look like this:
 ```yaml
 apiVersion: v1
