@@ -13,8 +13,8 @@ certManager:
   serviceAccountName: cert-manager
 
 image:
-  repository: zmejg/cert-manager-webhook-hetzner
-  tag: latest
+  repository: smoulder/cert-manager-webhook-hetzner
+  tag: v0.1.0
   pullPolicy: IfNotPresent
 
 nameOverride: ""
